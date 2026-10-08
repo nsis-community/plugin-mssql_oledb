@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <comutil.h>
 #include <sqloledb.h>
-#include "..\ExDLL\exdll.h"
+#include "exdll.h"
 #include "MMSQLOLEDB.h"
 #include "MMSQLQuery.h"
 #include "MMSQLError.h"
