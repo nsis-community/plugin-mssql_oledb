@@ -4,6 +4,10 @@
 ![Release](https://img.shields.io/github/v/release/nsis-community/plugin-mssql_oledb?style=for-the-badge)
 ![CI](https://img.shields.io/github/actions/workflow/status/nsis-community/plugin-mssql_oledb/ci.yml?style=for-the-badge)
 
+This repository mirrors the MSSQL_OLEDB plug-in, which was previously hosted on the [NSIS wiki](https://nsis.sourceforge.io/). Its source has been rearranged so that it builds automatically; code changes are limited to build fixes.
+
+**Are you the author?** You're welcome to take it over: [open an issue](https://github.com/nsis-community/plugin-mssql_oledb/issues/new) and we'll transfer the repository to you.
+
 > [!NOTE]
 > **Looking for the usage guide?** See [Docs/MSSQL_OLEDB/ReadMe.txt](Docs/MSSQL_OLEDB/ReadMe.txt).
 
