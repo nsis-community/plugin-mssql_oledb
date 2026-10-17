@@ -1,6 +1,14 @@
 #ifndef _EXDLL_H_
 #define _EXDLL_H_
 
+#include <windows.h>
+
+#if defined(__GNUC__)
+#define UNUSED __attribute__((unused))
+#else
+#define UNUSED
+#endif
+
 // only include this file from one place in your DLL.
 // (it is all static, if you use it in two places it will fail)
 
@@ -24,8 +32,10 @@ static unsigned int g_stringsize;
 static stack_t **g_stacktop;
 static char *g_variables;
 
-static int popstring(char *str); // 0 on success, 1 on empty stack
-static void pushstring(char *str);
+static int __stdcall popstring(char *str) UNUSED; // 0 on success, 1 on empty stack
+static void __stdcall pushstring(const char *str) UNUSED;
+static char * __stdcall getuservariable(const int varnum) UNUSED;
+static void __stdcall setuservariable(const int varnum, const char *var) UNUSED;
 
 enum
 {
@@ -57,39 +67,61 @@ INST_LANG,      // $LANGUAGE
 __INST_LAST
 };
 
+typedef struct {
+  int autoclose;
+  int all_user_var;
+  int exec_error;
+  int abort;
+  int exec_reboot;
+  int reboot_called;
+  int XXX_cur_insttype; // deprecated
+  int XXX_insttype_changed; // deprecated
+  int silent;
+  int instdir_error;
+  int rtl;
+  int errlvl;
+  int alter_reg_view;
+  int status_update;
+} exec_flags_type;
+
+typedef struct {
+  exec_flags_type *exec_flags;
+  int (__stdcall *ExecuteCodeSegment)(int, HWND);
+  void (__stdcall *validate_filename)(char *);
+} extra_parameters;
 
 // utility functions (not required but often useful)
-static int popstring(char *str)
+static int __stdcall popstring(char *str)
 {
   stack_t *th;
   if (!g_stacktop || !*g_stacktop) return 1;
   th=(*g_stacktop);
-  lstrcpy(str,th->text);
+  lstrcpyA(str,th->text);
   *g_stacktop = th->next;
   GlobalFree((HGLOBAL)th);
   return 0;
 }
 
-static void pushstring(char *str)
+static void __stdcall pushstring(const char *str)
 {
   stack_t *th;
   if (!g_stacktop) return;
   th=(stack_t*)GlobalAlloc(GPTR,sizeof(stack_t)+g_stringsize);
-  lstrcpyn(th->text,str,g_stringsize);
+  lstrcpynA(th->text,str,g_stringsize);
   th->next=*g_stacktop;
   *g_stacktop=th;
 }
 
-static char *getuservariable(int varnum)
+static char * __stdcall getuservariable(const int varnum)
 {
   if (varnum < 0 || varnum >= __INST_LAST) return NULL;
   return g_variables+varnum*g_stringsize;
 }
 
-static void setuservariable(int varnum, char *var)
+static void __stdcall setuservariable(const int varnum, const char *var)
 {
 	if (var != NULL && varnum >= 0 && varnum < __INST_LAST) 
-		lstrcpy(g_variables + varnum*g_stringsize, var);
+		lstrcpyA(g_variables + varnum*g_stringsize, var);
 }
 
 
