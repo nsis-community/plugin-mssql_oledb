@@ -23,7 +23,7 @@ jobs:
       - name: Build plug-in
         uses: nsis-dev/release-package@489fbb8cb19ff58dfd029c50b5cc0c5d693e576f # v0.4.1
         env:
-          LINK: /DEF:Contrib/MSSQL_OLEDB/MMSQL_OLEDB.def
+          LINK: -DEF:Contrib/MSSQL_OLEDB/MMSQL_OLEDB.def comsuppw.lib
         with:
           name: MSSQL_OLEDB
           sources: |
